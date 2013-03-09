@@ -14,23 +14,16 @@ var express = require('express')
   , connect = require('connect')
   , http = require('http')
   , path = require('path')
-  , mongoose = require('mongoose')
-  , io = require('socket.io').listen(config.ws);
+  , io = require('socket.io').listen(8080);
 
 var cookieParser = express.cookieParser('mapale'),
     sessionStore = new connect.middleware.session.MemoryStore();
 
-var SessionSockets = require('session.socket.io'),
-    sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
-
 var app = express();
 
 app.configure(function(){
-  app.set('port', config.port);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
-  app.use(express.favicon());
-  app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
@@ -42,10 +35,10 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
-app.get('/login', routes.login.get);
+/*arepp.get('/login', routes.login.get);
 app.post('/login', routes.login.post);
 app.get('/register', routes.register.get);
-app.post('/register', routes.register.post);
+app.post('/register', routes.register.post);*/
 
 io.on('connection', function (socket) {
   //socket.emit('session', session);
@@ -80,4 +73,6 @@ io.on('connection', function (socket) {
 
 });
 
-var server = http.createServer(app).listen(config.port);
+app.listen(80);
+
+var server = http.createServer(app);

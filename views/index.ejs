@@ -2,41 +2,42 @@
 <html>
   <head>
     <title><%= title %></title>
-    <meta name="viewport" content="width=640,user-scalable=no">
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  	<script type="text/javascript" src="http://hackaya.com:8080/socket.io/socket.io.js"></script>
-  	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <meta name="viewport" content="width=400,user-scalable=no">
+    <link rel='stylesheet' href='/css/bootstrap-responsive.min.css'/>
+  	<link rel='stylesheet' href='/css/bootstrap.min.css'/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://hackaya.com:8080/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.js"></script>
+
   	<script>
-    $(document).ready(function (){
-      $('#msg-box').hide();
-		});
-    var socket = io.connect('http://hackaya.com:8080');
+
+      var socket = io.connect('http://hackaya.com:8080');
 
   		socket.on('new', function (data){
-        $('.display').prepend('<div class="msg"><i>User: <b>'+data+'</b> has connected</i></div>');
+        $('.dl-horizontal').prepend('<dt>'+data+':</dt><dd>has connected</dd>');
   		});
 
       socket.on('err', function (err){
-        $('#debug').prepend('<br>'+err);
+        console.log(err);
       });
 
   		socket.on('disconnection', function (data){
-        $('.display').prepend('<div class="msg"><h4>System:</h4><p>'+data+' has disconnected</p></div>');
+        $('.dl-horizontal').prepend('<dt>System:</dt><dd>'+data+' has disconnected</dd>').fadeOut(1000);
   		});
 
       socket.on('logged', function (wlcm){
-        $('#login').remove()
-        $('.display').prepend('<div class="msg"><h4>System:</h4><p class="msg-body">'+wlcm+'</p></div>');
-        $('#msg-box').show();
+        $('#login').fadeOut(1000);
+        $('.dl-horizontal').prepend('<dt>System:</dt><dd>'+wlcm+'</dd>');
+        $('.h').fadeIn(2000);
       });
 
       function log (){
         var username = $('#u').val();
         socket.emit('login', {user: username});
         socket.on(username, function (msg){
-          $('.display').prepend('<div class="msg"><h4><b>'+msg.from+':</b></h4><p class="msg-body">'+msg.body+'</p></div>');
-            console.log(parseInt(Date.now())-parseInt(msg.date));
-
+          console.log(msg.body);
+          $('.dl-horizontal').prepend('<dt>'+msg.from+':</dt><dd>'+msg.body+'</dd>');
+          console.log(parseInt(Date.now())-parseInt(msg.date));
         });
       };
 
@@ -45,26 +46,44 @@
         var to = $('#msg-to').val();
         $('#msg-body').val('');
         $('#msg-to').val('');
-        $('.display').prepend('<div class="msg"><h4><b>Message to: '+to+'</b></h4><p class="msg-body">'+body+'</p></div>');
+        $('.dl-horizontal').prepend('<dt>You:</dt><dd>@'+to+' '+body+'</dd>');
         socket.emit('msg', {to: to, body: body});
       };
 
   	</script>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <fieldset id="login">
-      <input type="text" placeholder="Username" id="u">
-      <input type="password" placeholder="Password" id="p">
-      <button onclick="log()">Log In</button>
-    </fieldset>
-    <ul class="list"></ul>
-    <div class="display"></div>
-    <fieldset id="msg-box">
-      <textarea id="msg-body" placeholder="Write here your body"></textarea>
-      <input type="text" placeholder="Destiny" id="msg-to">
-      <button onclick="send()">Send Message</button>
-    </fieldset>
-    <div id="debug"></div>
+    <div class="navbar navbar-inverse">
+      <div class="navbar-inner">
+        <a class="brand" href="#"><%= title %></a>
+        <ul class="nav">
+          <li class="active"><a href="#">Chat</a></li>
+          <li><a href="//rvl.io/alexdev_/coolchat">Presentation</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-header"><h1>CoolChat <small> Real Time Chat</small></h1></div>
+    <div class="span12"> 
+      <form action="javascript:log()" id="login">
+        <label>Username:</label>
+        <input type="text" placeholder="Username" id="u" required>
+        <label>Password:</label>
+        <input type="password" placeholder="Password" id="p" required>
+        <button class="btn btn-primary">Log In</button>
+      </form>
+    </div>
+    <div class="h" style="display: none;">
+      <div><dl style="width: 80%" class="dl-horizontal"></dl></div>
+      <div class="span12">
+        <form action="javascript:send()" id="msg-box">
+          <label>Message:</label>
+          <textarea id="msg-body" placeholder="Write here your message"></textarea>
+          <label>Destinatary:</label>
+          <input type="text" placeholder="Destinatary" id="msg-to">
+          <label></label>
+          <button class="btn btn-primary">Send message</button>
+        </form>
+      </div>
+    </div>
   </body>
 </html>

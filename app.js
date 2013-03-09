@@ -9,12 +9,12 @@ var config = {
 }
 
 
-var express = require('express')
-  , routes = require('./routes')
-  , connect = require('connect')
-  , http = require('http')
-  , path = require('path')
-  , io = require('socket.io').listen(8080);
+var express = require('express'),
+    routes = require('./routes'),
+    connect = require('connect'),
+    http = require('http'),
+    path = require('path'),
+    io = require('socket.io').listen(8080);
 
 var cookieParser = express.cookieParser('mapale'),
     sessionStore = new connect.middleware.session.MemoryStore();

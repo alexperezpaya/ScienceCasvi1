@@ -22,7 +22,7 @@
       });
 
   		socket.on('disconnection', function (data){
-        $('.dl-horizontal').prepend('<dt>System:</dt><dd>'+data+' has disconnected</dd>').fadeOut(1000);
+        $('.dl-horizontal').prepend('<dt>System:</dt><dd>'+data+' has disconnected</dd>');
   		});
 
       socket.on('logged', function (wlcm){

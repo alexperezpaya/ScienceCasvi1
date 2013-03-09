@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <meta name="viewport" content="width=640,user-scalable=no">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  	<script type="text/javascript" src="//localhost:8080/socket.io/socket.io.js"></script>
+  	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  	<script>
+    $(document).ready(function (){
+      $('#msg-box').hide();
+		});
+    var socket = io.connect('http://hackaya.com:8080');
+
+  		socket.on('new', function (data){
+        $('.display').prepend('<div class="msg"><i>User: <b>'+data+'</b> has connected</i></div>');
+  		});
+
+      socket.on('err', function (err){
+        $('#debug').prepend('<br>'+err);
+      });
+
+  		socket.on('disconnection', function (data){
+        $('.display').prepend('<div class="msg"><h4>System:</h4><p>'+data+' has disconnected</p></div>');
+  		});
+
+      socket.on('logged', function (wlcm){
+        $('#login').remove()
+        $('.display').prepend('<div class="msg"><h4>System:</h4><p class="msg-body">'+wlcm+'</p></div>');
+        $('#msg-box').show();
+      });
+
+      function log (){
+        var username = $('#u').val();
+        socket.emit('login', {user: username});
+        socket.on(username, function (msg){
+          $('.display').prepend('<div class="msg"><h4><b>'+msg.from+':</b></h4><p class="msg-body">'+msg.body+'</p></div>');
+            console.log(parseInt(Date.now())-parseInt(msg.date));
+
+        });
+      };
+
+      function send(){
+        var body = $('#msg-body').val();
+        var to = $('#msg-to').val();
+        $('#msg-body').val('');
+        $('#msg-to').val('');
+        $('.display').prepend('<div class="msg"><h4><b>Message to: '+to+'</b></h4><p class="msg-body">'+body+'</p></div>');
+        socket.emit('msg', {to: to, body: body});
+      };
+
+  	</script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <fieldset id="login">
+      <input type="text" placeholder="Username" id="u">
+      <input type="password" placeholder="Password" id="p">
+      <button onclick="log()">Log In</button>
+    </fieldset>
+    <ul class="list"></ul>
+    <div class="display"></div>
+    <fieldset id="msg-box">
+      <textarea id="msg-body" placeholder="Write here your body"></textarea>
+      <input type="text" placeholder="Destiny" id="msg-to">
+      <button onclick="send()">Send Message</button>
+    </fieldset>
+    <div id="debug"></div>
+  </body>
+</html>

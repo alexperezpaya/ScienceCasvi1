@@ -1,0 +1,66 @@
+body {
+  padding: 50px;
+  font: 14px "Helvetica Neue";
+}
+
+input{
+	font: 18px "Helvetica Neue";
+	padding: 5px;
+	width: 95%;
+	border-radius: 5px;
+	border: solid;
+	border-width: 1px;
+}
+
+button{ background: none; border: none; margin: 0; padding: 0; font-size: 0; line-height: 0; width: auto; overflow: visible; }
+
+button{
+	font: 18px "Helvetica Neue";
+	border: solid;
+	border-width: 1px;
+	background: green;
+	border-radius: 5px;
+	padding: 5px;
+}
+
+button:hover{
+	box-shadow: 1px 1px 1px 1px #000;
+}
+
+a {
+  color: #00B7FF;
+}
+
+textarea{
+	width: 95%;
+	font: 18px "Helvetica Neue";
+	padding: 5px;
+	border: solid;
+	border-color: #000;
+	border-radius: 10px;
+	border-width: 1px;
+	box-shadow: none;
+}
+
+div.display{
+	padding-right: 4px;
+	overflow-x: scroll;
+	width: 80%;
+	height: 300px; 
+}
+
+.msg{
+	background: #D0D0D0;
+	border: solid;
+	border-width: 1px;
+	border-color: #000000;
+	width: 100%;
+}
+
+fieldset{
+	margin-top: 5px;
+	width: 80%;
+	height: 20%;
+	background-color: #D0D0D0;
+	border-radius: 15px; 
+}
